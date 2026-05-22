@@ -52,8 +52,8 @@ const SignUpForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle>Crie sua conta</CardTitle>
-            <CardDescription>Crie uma conta para continuar.</CardDescription>
+            <CardTitle>Crir conta</CardTitle>
+            <CardDescription>Crie uma conta para continuar</CardDescription>
           </CardHeader>
           <CardContent className="text-muted-foreground flex flex-col gap-3 py-4 text-sm">
             <FormField
