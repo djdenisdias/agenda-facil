@@ -1,0 +1,35 @@
+@baseUrl = http://localhost:8080
+# @token = seu_token_aqui
+###
+
+#Requisição POST (Criar um novo usuário)
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "Usuario Para Deletar",
+    "email": "usuario@deletar.com",
+    "password": "7777777"
+}
+###
+
+#Requisição GET (Listar todos os usuários)
+GET {{baseUrl}}/users
+###
+
+#Requisição GET (Listar um usuário)
+GET {{baseUrl}}/users/6a05eb689e2b680a428a0871
+###
+
+#Requisição PATCH (Atualizar um usuário)
+PATCH {{baseUrl}}/users/6a061cc0deff31b4fa476e04
+Content-Type: application/json
+
+{
+    "name": "Novo nome do usuário"
+}
+###
+
+#Requisição DELETE (Excluir um usuário)
+DELETE {{baseUrl}}/users/6a05fbd9704b64f8fcc6389b
+###
