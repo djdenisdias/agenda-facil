@@ -1,0 +1,143 @@
+"use client";
+import {
+  CalendarDays,
+  Gem,
+  LayoutDashboard,
+  LogOut,
+  Stethoscope,
+  UsersRound,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import { authClient } from "@/lib/auth-client";
+
+const menuItems = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "Agendamentos",
+    url: "/appointments",
+    icon: CalendarDays,
+  },
+  {
+    title: "Médicos",
+    url: "/doctors",
+    icon: Stethoscope,
+  },
+  {
+    title: "Pacientes",
+    url: "/patients",
+    icon: UsersRound,
+  },
+];
+
+export function AppSidebar() {
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/authentication");
+        },
+      },
+    });
+  };
+
+  return (
+    <Sidebar>
+      <SidebarHeader className="border-b p-4">
+        <div className="flex items-center justify-items-start gap-2">
+          <Image
+            src={"/logo.png"}
+            alt="logomarca da aplicação"
+            width={27}
+            height={27}
+          />
+          <span className="text-lg font-bold">Agenda Fácil</span>
+        </div>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.map((item, i) => (
+                <SidebarMenuItem key={i}>
+                  <SidebarMenuButton>
+                    <Link
+                      href={item.url}
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Outros</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <a
+                    href="/plans"
+                    className="flex items-center justify-center gap-2"
+                  >
+                    <Gem />
+                    <span>Planos</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="bg-primary mb-4 h-7 w-full rounded-lg text-white">
+                Clínica
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut />
+                  Sair
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  );
+}

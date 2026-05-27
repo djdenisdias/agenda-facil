@@ -3,14 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { createClinic } from "@/actions/create-clinic";
 import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
+import { CardContent, CardFooter } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -26,8 +25,6 @@ const loginSchema = z.object({
 });
 
 const ClinicForm = () => {
-  // const router = useRouter();
-
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -50,25 +47,27 @@ const ClinicForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome da clínica</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Digite seu e-mail"
-                  type="text"
-                  autoComplete="name"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <DialogFooter className="sm:justify-start">
+        <CardContent>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome da clínica</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Digite seu e-mail"
+                    type="text"
+                    autoComplete="name"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </CardContent>
+        <CardFooter className="sm:justify-start">
           <Button type="submit" className="w-full">
             {form.formState.isSubmitting ? (
               <Loader2 className="animated-spin mr-2 h-4 w-4" />
@@ -76,7 +75,7 @@ const ClinicForm = () => {
               "Adicionar"
             )}
           </Button>
-        </DialogFooter>
+        </CardFooter>
       </form>
     </Form>
   );
