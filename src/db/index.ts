@@ -2,6 +2,8 @@ import "dotenv/config";
 
 import { drizzle } from "drizzle-orm/neon-http";
 
+import * as schema from "./schema";
+
 const dbURL = process.env.DATABASE_URL;
 
 if (!dbURL) {
@@ -10,4 +12,6 @@ if (!dbURL) {
   );
 }
 
-export const db = drizzle(dbURL);
+export const db = drizzle(dbURL, {
+  schema,
+});
