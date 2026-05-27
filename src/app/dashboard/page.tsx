@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -31,6 +32,10 @@ const DashboardPage = async () => {
       <h1>DASHBOARD!</h1>
       <Card className="w-[250px]">
         <CardContent>
+          {session?.user.image && (
+            // <Image src={session?.user.image} alt={"Imagem do usuário"} />
+            <p>{session?.user.image}</p>
+          )}
           <p>Nome: {session?.user.name}</p>
           <p>E-mail: {session?.user.email}</p>
         </CardContent>

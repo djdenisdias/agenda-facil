@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -50,7 +51,7 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+  const handleSubmit = async (values: z.infer<typeof loginSchema>) => {
     await authClient.signIn.email(
       {
         email: values.email,
@@ -67,10 +68,17 @@ const LoginForm = () => {
     );
   };
 
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
+  };
+
   return (
     <Card>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <CardHeader>
             <CardTitle>Login</CardTitle>
             <CardDescription>Faça login para continuar</CardDescription>
@@ -114,17 +122,32 @@ const LoginForm = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button
-              className="w-full"
-              type="submit"
-              disabled={form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting ? (
-                <Loader2 className="animated-spin mr-2 h-4 w-4" />
-              ) : (
-                "Login"
-              )}
-            </Button>
+            <div className="flex w-full flex-col gap-1">
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? (
+                  <Loader2 className="animated-spin mr-2 h-4 w-4" />
+                ) : (
+                  "Login"
+                )}
+              </Button>
+              <Button
+                className="w-full border-black border-gray-300 bg-white text-black"
+                onClick={handleGoogleLogin}
+                type="button"
+              >
+                <Image
+                  src={"/google-logo.png"}
+                  alt={"Logomarca do Google"}
+                  width={20}
+                  height={20}
+                />
+                Entrar com o Google
+              </Button>
+            </div>
           </CardFooter>
         </form>
       </Form>
