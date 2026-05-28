@@ -56,7 +56,7 @@ const ClinicForm = () => {
                 <FormLabel>Nome da clínica</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Digite seu e-mail"
+                    placeholder="Digite o nome da clínica"
                     type="text"
                     autoComplete="name"
                     {...field}
@@ -70,7 +70,7 @@ const ClinicForm = () => {
         <CardFooter className="sm:justify-start">
           <Button type="submit" className="w-full">
             {form.formState.isSubmitting ? (
-              <Loader2 className="animated-spin mr-2 h-4 w-4" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               "Adicionar"
             )}

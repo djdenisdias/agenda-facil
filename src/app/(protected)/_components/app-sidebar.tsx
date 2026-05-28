@@ -11,7 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,6 +57,7 @@ const menuItems = [
 
 export function AppSidebar() {
   const router = useRouter();
+  const session = authClient.useSession();
 
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -108,13 +109,13 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton>
-                  <a
+                  <Link
                     href="/plans"
                     className="flex items-center justify-center gap-2"
                   >
                     <Gem />
                     <span>Planos</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -125,8 +126,21 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
-              <DropdownMenuTrigger className="bg-primary mb-4 h-7 w-full rounded-lg text-white">
-                Clínica
+              {/* <DropdownMenuTrigger className="bg-primary mb-4 h-7 w-full rounded-lg text-white"> */}
+              <DropdownMenuTrigger asChild className="mb-4 w-full">
+                <SidebarMenuButton size="lg">
+                  <Avatar>
+                    <AvatarFallback>F</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-sm">
+                      {session.data?.user.clinicId.name}
+                    </p>
+                    <p className="text-muted-foreground text-sm">
+                      {session.data?.user.email}
+                    </p>
+                  </div>
+                </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem onClick={handleSignOut}>

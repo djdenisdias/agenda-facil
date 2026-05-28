@@ -129,7 +129,7 @@ const LoginForm = () => {
                 disabled={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting ? (
-                  <Loader2 className="animated-spin mr-2 h-4 w-4" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   "Login"
                 )}

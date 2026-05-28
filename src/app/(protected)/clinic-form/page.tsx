@@ -10,7 +10,7 @@ import ClinicForm from "./_components/form";
 const ClinicFormPage = () => {
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center gap-2">
-      <Card>
+      <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Adicionar clínica</CardTitle>
           <CardDescription>Adicione uma clínica para continuar</CardDescription>
