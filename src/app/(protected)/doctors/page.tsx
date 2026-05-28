@@ -1,8 +1,37 @@
+import { Plus } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  PageContainer,
+  PageContent,
+  PageHeader,
+  PageHeaderActions,
+  PageHeaderContent,
+  PageHeaderDescription,
+  PageHeaderTitle,
+} from "@/components/ui/page-container";
+
 const DoctorsPage = () => {
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center gap-2">
-      <h1>Doctors</h1>
-    </div>
+    <PageContainer>
+      <PageHeader>
+        <PageHeaderContent>
+          <PageHeaderTitle>Médicos</PageHeaderTitle>
+          <PageHeaderDescription>
+            Gerencie os médicos da sua clínica
+          </PageHeaderDescription>
+        </PageHeaderContent>
+        <PageHeaderActions>
+          <Button>
+            <Plus />
+            Adicionar médico
+          </Button>
+        </PageHeaderActions>
+      </PageHeader>
+      <PageContent>
+        <h1>Médicos</h1>
+      </PageContent>
+    </PageContainer>
   );
 };
 

@@ -10,8 +10,10 @@ export default function ProtectedLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarTrigger />
-      {children}
+      <main className="w-full">
+        <SidebarTrigger />
+        {children}
+      </main>
     </SidebarProvider>
   );
 }

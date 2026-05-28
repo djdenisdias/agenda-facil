@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -58,6 +58,7 @@ const menuItems = [
 export function AppSidebar() {
   const router = useRouter();
   const session = authClient.useSession();
+  const pathName = usePathname();
 
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -89,7 +90,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item, i) => (
                 <SidebarMenuItem key={i}>
-                  <SidebarMenuButton>
+                  <SidebarMenuButton isActive={pathName === item.url}>
                     <Link
                       href={item.url}
                       className="flex items-center justify-center gap-2"
