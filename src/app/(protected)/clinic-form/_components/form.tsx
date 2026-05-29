@@ -58,7 +58,6 @@ const ClinicForm = () => {
                   <Input
                     placeholder="Digite o nome da clínica"
                     type="text"
-                    autoComplete="name"
                     {...field}
                   />
                 </FormControl>

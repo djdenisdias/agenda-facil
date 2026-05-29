@@ -94,7 +94,6 @@ const LoginForm = () => {
                     <Input
                       placeholder="Digite seu e-mail"
                       type="email"
-                      autoComplete="username"
                       {...field}
                     />
                   </FormControl>
@@ -112,7 +111,6 @@ const LoginForm = () => {
                     <Input
                       placeholder="Digite sua senha"
                       type="password"
-                      autoComplete="current-password"
                       {...field}
                     />
                   </FormControl>
