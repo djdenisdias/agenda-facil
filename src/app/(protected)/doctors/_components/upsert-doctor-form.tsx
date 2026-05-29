@@ -1,10 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+import { toast } from "sonner";
 import z from "zod";
 
+import { upsertDoctor } from "@/actions/upsert-doctor";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -36,36 +39,34 @@ import { medicalSpecialties } from "../_constants";
 
 const formSchema = z
   .object({
-    name: z.string().trim().min(1, {
-      message: "Nome é obrigatório",
-    }),
-    specialty: z.string().trim().min(1, {
-      message: "Especialidade é obrigatório",
-    }),
-    appointmentPrice: z.number().min(1, {
-      message: "Valor da consulta é obrigatório",
-    }),
+    name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
+    specialty: z
+      .string()
+      .trim()
+      .min(1, { message: "Especialidade é obrigatório" }),
+    appointmentPrice: z
+      .number()
+      .min(1, { message: "Valor da consulta é obrigatório" }),
     availableFromWeekDay: z.string(),
     availableToWeekDay: z.string(),
-    availableFromTime: z.string().min(1, {
-      message: "Hora de início é obrigatória",
-    }),
-    availableToTime: z.string().min(1, {
-      message: "Hora de término é obrigatória",
-    }),
+    availableFromTime: z
+      .string()
+      .min(1, { message: "Hora de início é obrigatória" }),
+    availableToTime: z
+      .string()
+      .min(1, { message: "Hora de término é obrigatória" }),
   })
-  .refine(
-    (data) => {
-      return data.availableFromTime < data.availableToTime;
-    },
-    {
-      message:
-        "O horário de término não pode ser menor ou igual ao horário de início",
-      path: ["availableToTime"],
-    },
-  );
+  .refine((data) => data.availableFromTime < data.availableToTime, {
+    message:
+      "O horário de término não pode ser menor ou igual ao horário de início",
+    path: ["availableToTime"],
+  });
 
-const UpsertDoctorForm = () => {
+interface UpsertDoctorFormProps {
+  onSuccess?: () => void;
+}
+
+const UpsertDoctorForm = ({ onSuccess }: UpsertDoctorFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -79,9 +80,29 @@ const UpsertDoctorForm = () => {
     },
   });
 
+  const upsertDoctorAction = useAction(upsertDoctor, {
+    onSuccess: () => {
+      toast.success("Médico adicionado com sucesso! 😁");
+      form.reset();
+      onSuccess?.();
+    },
+    onError: () => {
+      toast.error("Erro ao adicionar médico 😔");
+    },
+  });
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    upsertDoctorAction.execute({
+      name: values.name,
+      specialty: values.specialty,
+      appointmentPriceInCents: Math.round(values.appointmentPrice * 100),
+      availableFromWeekDay: parseInt(values.availableFromWeekDay),
+      availableToWeekDay: parseInt(values.availableToWeekDay),
+      availableFromTime: values.availableFromTime,
+      availableToTime: values.availableToTime,
+    });
   };
+
   return (
     <DialogContent>
       <DialogHeader>
@@ -105,6 +126,7 @@ const UpsertDoctorForm = () => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="specialty"
@@ -113,7 +135,7 @@ const UpsertDoctorForm = () => {
                 <FormLabel>Especialidade</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value || ""}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -132,30 +154,34 @@ const UpsertDoctorForm = () => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="appointmentPrice"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Preço da consulta</FormLabel>
-                <NumericFormat
-                  value={field.value}
-                  onValueChange={(value) => {
-                    field.onChange(value.floatValue);
-                  }}
-                  decimalScale={2}
-                  fixedDecimalScale
-                  decimalSeparator=","
-                  allowNegative={false}
-                  allowLeadingZeros={false}
-                  thousandSeparator="."
-                  customInput={Input}
-                  prefix="R$"
-                />
+                <FormControl>
+                  <NumericFormat
+                    value={field.value}
+                    onValueChange={(value) =>
+                      field.onChange(value.floatValue || 0)
+                    }
+                    decimalScale={2}
+                    fixedDecimalScale
+                    decimalSeparator=","
+                    allowNegative={false}
+                    allowLeadingZeros={false}
+                    thousandSeparator="."
+                    customInput={Input}
+                    prefix="R$ "
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="availableFromWeekDay"
@@ -164,7 +190,7 @@ const UpsertDoctorForm = () => {
                 <FormLabel>Dia inicial de disponibilidade</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value || ""}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -185,6 +211,7 @@ const UpsertDoctorForm = () => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="availableToWeekDay"
@@ -193,7 +220,7 @@ const UpsertDoctorForm = () => {
                 <FormLabel>Dia final de disponibilidade</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value || ""}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -219,10 +246,10 @@ const UpsertDoctorForm = () => {
             name="availableFromTime"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Horário inicial de disponibilidade</FormLabel>
+                <FormLabel>Horário incial de disponibilidade</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value || ""}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -291,7 +318,7 @@ const UpsertDoctorForm = () => {
                 <FormLabel>Horário final de disponibilidade</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value || ""}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -353,7 +380,9 @@ const UpsertDoctorForm = () => {
             )}
           />
           <DialogFooter>
-            <Button type="submit">Adicionar</Button>
+            <Button type="submit" disabled={upsertDoctorAction.isPending}>
+              {upsertDoctorAction.isPending ? "Adicionando.." : "Adicionar"}
+            </Button>
           </DialogFooter>
         </form>
       </Form>
