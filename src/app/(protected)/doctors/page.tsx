@@ -42,6 +42,9 @@ const DoctorsPage = async () => {
       </PageHeader>
       <PageContent>
         <h1>Médicos</h1>
+        {
+          // session.user.
+        }
       </PageContent>
     </PageContainer>
   );
