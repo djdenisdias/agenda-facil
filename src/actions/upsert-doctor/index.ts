@@ -71,5 +71,3 @@ export const upsertDoctor = actionClient
 
     revalidatePath("/doctors");
   });
-
-// redirect("/dashboard");
