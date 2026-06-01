@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import {
@@ -49,6 +50,17 @@ const DoctorsPage = async () => {
         </PageHeaderActions>
       </PageHeader>
       <PageContent>
+        {doctors.length === 0 && (
+          <div className="mt-50 flex flex-col items-center justify-center">
+            <h1>Nenhum médico cadastrado ainda</h1>
+            <Image
+              src="/empty.png"
+              width={96}
+              height={96}
+              alt="Nenhum médico cadastrado ainda"
+            ></Image>
+          </div>
+        )}
         <div className="grid grid-cols-3 gap-6">
           {doctors.map((doc) => (
             <DoctorCard key={doc.id} doctor={doc} />

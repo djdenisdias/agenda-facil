@@ -1,9 +1,25 @@
 "use client";
-import { CalendarIcon, ClockIcon } from "lucide-react";
+import { CalendarIcon, ClockIcon, Trash } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
+import { toast } from "sonner";
 
+import { deleteDoctor } from "@/actions/delete-doctor";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -31,6 +47,23 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
     .join("");
 
   const availability = getAvailability(doctor);
+
+  const deleteDoctorAction = useAction(deleteDoctor, {
+    onSuccess: () => {
+      toast.warning("Médico deletado com sucesso! 😐");
+    },
+    onError: () => {
+      toast.error("Erro ao deletar médico 😮");
+    },
+  });
+
+  const handleDeleteDoctorClick = () => {
+    if (!doctor) {
+      return;
+    }
+
+    deleteDoctorAction.execute({ id: doctor.id });
+  };
 
   return (
     <Card>
@@ -61,15 +94,14 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
           {formatCurrencyInCents(doctor.appointmentPriceInCents)}
         </Badge>
       </CardContent>
-      <Separator />
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-2">
         <Dialog
           open={isUpsertDoctorDialogOpnen}
           onOpenChange={SetIsUpsertDoctorDialogOpnen}
         >
-          <DialogTrigger>
-            <div className="bg-primary flex gap-2 rounded-lg p-1 pr-2 pl-2 text-white">
-              Ver detalhe
+          <DialogTrigger className="w-full">
+            <div className="bg-primary flex justify-center gap-2 rounded-lg p-1 pr-2 pl-2 text-white">
+              Ver detalhes
             </div>
           </DialogTrigger>
           <UpsertDoctorForm
@@ -81,6 +113,33 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
             onSuccess={() => SetIsUpsertDoctorDialogOpnen(false)}
           />
         </Dialog>
+        <AlertDialog>
+          <AlertDialogTrigger className="w-full">
+            <Button variant="destructive" type="button" className="w-full">
+              <Trash size={16} />
+              Excluir médico
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogOverlay />
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Tem certeza que quer excluir o médico{" "}
+                <span className="font-extrabold">{doctor.name}</span>?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Ao excluir um médico, todas as consultas atreladas a ele também
+                serão excluídas!
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteDoctorClick}>
+                Confirmar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardFooter>
     </Card>
   );
