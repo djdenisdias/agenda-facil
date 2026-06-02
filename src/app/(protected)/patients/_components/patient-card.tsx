@@ -1,26 +1,10 @@
 "use client";
-import { CalendarIcon, ClockIcon, Trash } from "lucide-react";
-import { Edit } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
-import { useState } from "react";
-import { toast } from "sonner";
 
-// import { deletePatient } from "@/actions/delete-patient";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { Edit } from "lucide-react";
+import { useState } from "react";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -44,23 +28,6 @@ const PatientCard = ({ patient }: PatientCardProps) => {
     .split(" ")
     .map((name) => name[0])
     .join("");
-
-  // const deletePatientAction = useAction(deletePatient, {
-  //   onSuccess: () => {
-  //     toast.warning("Paciente deletado com sucesso! 😐");
-  //   },
-  //   onError: () => {
-  //     toast.error("Erro ao deletar paciente 😮");
-  //   },
-  // });
-
-  // const handleDeletePatientClick = () => {
-  //   if (!patient) {
-  //     return;
-  //   }
-
-  //   deletePatientAction.execute({ id: patient.id });
-  // };
 
   return (
     <Card>
@@ -98,33 +65,6 @@ const PatientCard = ({ patient }: PatientCardProps) => {
             onSuccess={() => SetIsUpsertPatientDialogOpnen(false)}
           />
         </Dialog>
-        {/* <AlertDialog>
-          <AlertDialogTrigger className="w-full">
-            <Button variant="destructive" type="button" className="w-full">
-              <Trash size={16} />
-              Excluir paciente
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogOverlay />
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Tem certeza que quer excluir o paciente{" "}
-                <span className="font-extrabold">{patient.name}</span>?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                Ao excluir um paciente, todas as consultas atreladas a ele também
-                serão excluídas!
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeletePatientClick}>
-                Confirmar
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog> */}
       </CardFooter>
     </Card>
   );
