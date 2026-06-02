@@ -32,4 +32,4 @@ export const upsertDoctorSchema = z
     },
   );
 
-export type UpsetDoctorSchema = z.infer<typeof upsertDoctorSchema>;
+export type UpsertDoctorSchema = z.infer<typeof upsertDoctorSchema>;
