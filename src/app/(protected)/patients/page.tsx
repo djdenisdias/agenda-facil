@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
+import { DataTable } from "@/components/data-table";
 import {
   PageContainer,
   PageContent,
@@ -18,6 +19,7 @@ import { auth } from "@/lib/auth";
 
 import PatientCard from "../patients/_components/patient-card";
 import AddPatientButton from "./_components/add-patient-button";
+import { patientsTableColumns } from "./_components/table-columns";
 
 // import AddDoctorButton from "./_components/add-doctor-button";
 // import DoctorCard from "./_components/doctor-card";
@@ -64,11 +66,13 @@ const PatientsPage = async () => {
             ></Image>
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-6">
-            {patients.map((patient) => (
-              <PatientCard key={patient.id} patient={patient} />
-            ))}
-          </div>
+          <DataTable data={patients} columns={patientsTableColumns}></DataTable>
+
+          // <div className="grid grid-cols-3 gap-6">
+          //   {patients.map((patient) => (
+          //     <PatientCard key={patient.id} patient={patient} />
+          //   ))}
+          // </div>
         )}
       </PageContent>
     </PageContainer>
