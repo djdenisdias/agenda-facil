@@ -78,7 +78,11 @@ const UpsertPatientForm = ({ patient, onSuccess }: UpsertPatientFormProps) => {
 
   const upsertPatientAction = useAction(upsertPatient, {
     onSuccess: () => {
-      toast.success("Paciente adicionado com sucesso! 😁");
+      if (patient) {
+        toast.success("Paciente atualizado com sucesso! 😁");
+      } else {
+        toast.success("Paciente adicionado com sucesso! 😁");
+      }
       form.reset();
       onSuccess?.();
     },
