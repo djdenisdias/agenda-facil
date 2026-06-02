@@ -1,5 +1,4 @@
 import { eq } from "drizzle-orm";
-import { Share2 } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -17,6 +16,7 @@ import { db } from "@/db";
 import { patientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
+import PatientCard from "../patients/_components/patient-card";
 import AddPatientButton from "./_components/add-patient-button";
 
 // import AddDoctorButton from "./_components/add-doctor-button";
@@ -64,29 +64,11 @@ const PatientsPage = async () => {
             ></Image>
           </div>
         ) : (
-          <table className="w-full">
-            <th className="flex w-full justify-between text-left">
-              <td className="text-left">NOME</td>
-              <td className="text-left">E-MAIL</td>
-              <td className="text-left">NÚMERO DE CELULAR</td>
-              <td className="text-left">SEXO</td>
-              <td></td>
-            </th>
+          <div className="grid grid-cols-3 gap-6">
             {patients.map((patient) => (
-              <tr
-                key={patient.id}
-                className="flex w-full justify-between text-left"
-              >
-                <td className="text-left">{patient.name}</td>
-                <td className="text-left">{patient.email}</td>
-                <td className="text-left">{patient.phoneNumber}</td>
-                <td className="text-left">{patient.sex}</td>
-                <td>
-                  <Share2 />
-                </td>
-              </tr>
+              <PatientCard key={patient.id} patient={patient} />
             ))}
-          </table>
+          </div>
         )}
       </PageContent>
     </PageContainer>
