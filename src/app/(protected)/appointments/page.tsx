@@ -14,13 +14,13 @@ import {
   PageHeaderTitle,
 } from "@/components/ui/page-container";
 import { db } from "@/db";
-import { patientsTable } from "@/db/schema";
+import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-import AddPatientButton from "./_components/add-patient-button";
-import { patientsTableColumns } from "./_components/table-columns";
+import AddAppointmentButton from "./_components/add-appointment-button";
+import { appointmentsTableColumns } from "./_components/table-columns";
 
-const PatientsPage = async () => {
+const AppointmentsPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -33,27 +33,36 @@ const PatientsPage = async () => {
     redirect("/clinic-form");
   }
 
-  const patients = await db.query.patientsTable.findMany({
-    where: eq(patientsTable.clinicId, session.user.clinicId.id),
+  const [doctors, patients] = await Promise.all([
+    db.query.doctorsTable.findMany({
+      where: eq(doctorsTable.clinicId, session.user.clinicId.id),
+    }),
+    db.query.patientsTable.findMany({
+      where: eq(patientsTable.clinicId, session.user.clinicId.id),
+    }),
+  ]);
+
+  const appointments = await db.query.appointmentsTable.findMany({
+    where: eq(appointmentsTable.clinicId, session.user.clinicId.id),
   });
 
   return (
     <PageContainer>
       <PageHeader>
         <PageHeaderContent>
-          <PageHeaderTitle>Pacientes</PageHeaderTitle>
+          <PageHeaderTitle>Agendamentos</PageHeaderTitle>
           <PageHeaderDescription>
-            Acesse uma visão geral detalhada dos pacientes
+            Acesse uma visão geral detalhada dos agendamentos
           </PageHeaderDescription>
         </PageHeaderContent>
         <PageHeaderActions>
-          <AddPatientButton />
+          <AddAppointmentButton patients={patients} doctors={doctors} />
         </PageHeaderActions>
       </PageHeader>
       <PageContent>
-        {patients.length === 0 ? (
+        {appointments.length === 0 ? (
           <div className="mt-50 flex flex-col items-center justify-center">
-            <h1>Nenhum paciente cadastrado ainda</h1>
+            <h1>Nenhum agendamento cadastrado ainda</h1>
             <Image
               src="/empty.png"
               width={96}
@@ -62,11 +71,14 @@ const PatientsPage = async () => {
             ></Image>
           </div>
         ) : (
-          <DataTable data={patients} columns={patientsTableColumns}></DataTable>
+          <DataTable
+            data={appointments}
+            columns={appointmentsTableColumns}
+          ></DataTable>
         )}
       </PageContent>
     </PageContainer>
   );
 };
 
-export default PatientsPage;
+export default AppointmentsPage;
